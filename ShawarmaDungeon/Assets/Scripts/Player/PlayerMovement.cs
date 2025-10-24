@@ -5,6 +5,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 7f;
     Vector2 moveDirection;
 
+    [SerializeField] private Animator anim;
+
     Rigidbody2D rb;
     PlayerInput input;
 
@@ -27,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 moveInput = input.Movement.Movement.ReadValue<Vector2>();
         moveDirection = moveInput.x * transform.right + moveInput.y * transform.up;
+
+        anim.SetFloat("Speed", moveDirection.normalized.magnitude / moveSpeed);
     }
 
     private void FixedUpdate()
