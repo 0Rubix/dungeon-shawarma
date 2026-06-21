@@ -18,6 +18,16 @@ public class PlayerMovement : MonoBehaviour
         input.Movement.Enable();
     }
 
+    private void OnEnable()
+    {
+        input.Movement.Enable();
+    }
+
+    private void OnDisable()
+    {
+        input.Movement.Disable();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
