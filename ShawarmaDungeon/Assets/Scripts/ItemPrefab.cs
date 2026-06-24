@@ -3,6 +3,7 @@ using UnityEngine;
 public class ItemPrefab : Interactable
 {
     public Item item;
+    public int amount = 1;
 
     SpriteRenderer spriteRenderer;
     BoxCollider2D col;
@@ -27,7 +28,7 @@ public class ItemPrefab : Interactable
 
     public override void Use()
     {
-        bool added = InventoryManager.instance.AddItem(item);
+        bool added = InventoryManager.instance.AddItem(item, amount);
 
         if (added)
             base.Use();

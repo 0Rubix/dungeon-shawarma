@@ -3,19 +3,34 @@ using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private Transform slots;
-    InventorySlot[] inventorySlots;
+    [SerializeField] private Transform hotbarSlots;
+    [SerializeField] private Transform inventorySlots;
+    List<InventorySlot> slots = new List<InventorySlot>();
 
     void Start()
     {
-        inventorySlots = slots.GetComponentsInChildren<InventorySlot>();
+        int slotIndex = 0;
+        foreach (var slot in hotbarSlots.GetComponentsInChildren<InventorySlot>())
+        {
+            slot.slot = slotIndex;
+            slots.Add(slot);
+            slotIndex++;
+        }
+
+        foreach (var slot in inventorySlots.GetComponentsInChildren<InventorySlot>())
+        {
+            slot.slot = slotIndex;
+            slots.Add(slot);
+            slotIndex++;
+        }
 
         InventoryManager.instance.onInventoryChanged += UpdateUI;
+
     }
 
     public void UpdateUI(int s, Item item, int amount)
     {
-        InventorySlot slot = inventorySlots[s];
+        InventorySlot slot = slots[s];
 
         if (item == null)
         {

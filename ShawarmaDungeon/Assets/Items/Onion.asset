@@ -15,4 +15,4 @@ MonoBehaviour:
   name: Onion
   icon: {fileID: 3094008053702901747, guid: f3d3ca639a33ccf4895e173ff63a163b, type: 3}
   inventoryIcon: {fileID: 4365341006538210109, guid: 081bea6c50f0ff84b98b1338639826c9, type: 3}
-  maxStack: 2
+  maxStack: 10

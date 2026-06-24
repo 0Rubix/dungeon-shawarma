@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,6 +41,8 @@ public class PlayerInventory : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = true;
         GetComponent<PlayerAim>().enabled = true;
         InventoryManager.instance.isOpen = false;
+
+        InventoryManager.instance.onInventoryToggle.Invoke();
     }
 
     void EscapeCloseInventory(InputAction.CallbackContext ctx)
