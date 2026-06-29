@@ -1,16 +1,19 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+public class InventorySlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public int slot = 0;
     public Item item;
     public int amount = 0;
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI amountText;
-    [SerializeField] private GameObject rim;
+    public GameObject rim;
+    public GameObject rightClickMenu;
+    [SerializeField] private GameObject[] rightClickButtons;
 
     private void Start()
     {
@@ -35,73 +38,75 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
         amountText.text = "";
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void Use()
     {
-        if (eventData.pointerCurrentRaycast.gameObject != gameObject) return;
+        item.Use();
+        InventoryManager.instance.RemoveFromSlot(slot, 1);
 
-        InventorySlot cursorSlot = InventoryManager.instance.cursorSlot;
+        if (amount == 0)
+            ResetUI();
+    }
 
-        if (cursorSlot.item == null && item == null) return;
+    public void Scrap()
+    {
+        item.Scrap();
+        InventoryManager.instance.RemoveFromSlot(slot, 1);
 
-        if (eventData.button == PointerEventData.InputButton.Left)
+        if (amount == 0)
+            ResetUI();
+    }
+
+    public void QuickCraft()
+    {
+        item.QuickCraft();
+        InventoryManager.instance.RemoveFromSlot(slot, 1);
+
+        if (amount == 0)
+            ResetUI();
+    }
+
+    public void Drop()
+    {
+        ItemPrefab itemPrefab = Instantiate(InventoryManager.instance.itemPrefab, GameManager.instance.player.transform.position, Quaternion.identity).GetComponent<ItemPrefab>();
+        itemPrefab.Setup(item);
+        InventoryManager.instance.RemoveFromSlot(slot, 1);
+
+        if (amount == 0)
+            ResetUI();
+    }
+
+    public void DropAll()
+    {
+        for (int i = 0; i < amount; i++)
         {
-            if (item != null && cursorSlot.item == null)
-            {
-                cursorSlot.Add(item, amount);
-                InventoryManager.instance.cursorTookFrom = slot;
-                InventoryManager.instance.EmptySlot(slot);
-            }
-            else if (item == null && cursorSlot.item != null)
-            {
-                InventoryManager.instance.AddItem(cursorSlot.item, cursorSlot.amount, slot);
-                InventoryManager.instance.cursorTookFrom = -1;
-                cursorSlot.Clear();
-            }
-            else if (item != cursorSlot.item || item == cursorSlot.item && amount >= item.maxStack)
-            {
-                Item tempItem = item;
-                int tempAmount = amount;
-
-                Add(cursorSlot.item, cursorSlot.amount);
-                InventoryManager.instance.EmptySlot(slot);
-                InventoryManager.instance.AddItem(cursorSlot.item, cursorSlot.amount, slot);
-                cursorSlot.Add(tempItem, tempAmount);
-                InventoryManager.instance.cursorTookFrom = slot;
-            }
-            else
-            {
-                int availableAmount = item.maxStack - amount; // How many more items can the slot fit before reaching the stack
-                int newAmount = availableAmount > cursorSlot.amount ? cursorSlot.amount : availableAmount;
-                int remainingAmount = cursorSlot.amount > availableAmount ? cursorSlot.amount - availableAmount : 0;
-
-                InventoryManager.instance.AddItem(item, newAmount, slot);
-
-                if (newAmount == cursorSlot.amount)
-                {
-                    InventoryManager.instance.cursorTookFrom = -1;
-                    cursorSlot.Clear();
-                }
-                else
-                {
-                    cursorSlot.Add(item, remainingAmount);
-                }
-            }
+            ItemPrefab itemPrefab = Instantiate(InventoryManager.instance.itemPrefab, GameManager.instance.player.transform.position, Quaternion.identity).GetComponent<ItemPrefab>();
+            itemPrefab.Setup(item);
         }
+        InventoryManager.instance.RemoveFromSlot(slot, amount);
+        ResetUI();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        rim.SetActive(true);
+        if (!InventoryManager.instance.rightClickMenuOpen)
+            rim.SetActive(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        rim.SetActive(false);
+        if (!InventoryManager.instance.rightClickMenuOpen)
+            rim.SetActive(false);
     }
 
     public void ResetUI()
     {
         rim.SetActive(false);
+        if (InventoryManager.instance.rightClickMenuSlot != null)
+        {
+            InventoryManager.instance.rightClickMenuSlot.CloseRightClickMenu();
+            InventoryManager.instance.rightClickMenuSlot = null;
+            InventoryManager.instance.rightClickMenuOpen = false;
+        }
 
         InventorySlot cursorSlot = InventoryManager.instance.cursorSlot;
         int slot = InventoryManager.instance.cursorTookFrom;
@@ -114,5 +119,40 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler, IPointerEnterH
             InventoryManager.instance.AddItem(cursorSlot.item, cursorSlot.amount, slot);
 
         cursorSlot.Clear();
+
+    }
+
+    public void ShowMenuOptions(Item.MenuOptions options)
+    {
+        int i = 0;
+        foreach (Item.MenuOptions option in Enum.GetValues(typeof(Item.MenuOptions)))
+        {
+            if (option == Item.MenuOptions.Nothing || option == Item.MenuOptions.Everything)
+                continue;
+
+            rightClickButtons[i].SetActive(options.HasFlag(option));
+            i++;
+        }
+    }
+
+    public void ClearOptions()
+    {
+        for (int i = 0; i <  rightClickButtons.Length; i++) rightClickButtons[i].SetActive(false);
+    }
+
+    public void CloseRightClickMenu()
+    {
+        rightClickMenu.SetActive(false);
+        rim.SetActive(false);
+    }
+
+    public bool CheckMouseRaycast(GameObject g)
+    {
+        foreach (GameObject button in rightClickButtons)
+        {
+            if (g == button) return true;
+        }
+
+        return false;
     }
 }

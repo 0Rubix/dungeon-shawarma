@@ -10,6 +10,14 @@ public class ItemPrefab : Interactable
 
     private void Awake()
     {
+        if (item != null)
+            Setup(item);
+    }
+
+    public void Setup(Item item)
+    {
+        this.item = item;
+
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         col = GetComponent<BoxCollider2D>();
 

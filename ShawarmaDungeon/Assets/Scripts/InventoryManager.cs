@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,6 +17,8 @@ public class InventoryManager : MonoBehaviour
         instance = this;
     }
 
+    public GameObject itemPrefab;
+
     public bool isOpen = false;
 
     public KeyValuePair<Item, int>[] inventory;
@@ -26,6 +27,9 @@ public class InventoryManager : MonoBehaviour
 
     public InventorySlot cursorSlot;
     public int cursorTookFrom = -1;
+
+    public InventorySlot rightClickMenuSlot;
+    public bool rightClickMenuOpen = false;
 
     void Start()
     {
@@ -115,5 +119,31 @@ public class InventoryManager : MonoBehaviour
     {
         inventory[slot] = new KeyValuePair<Item, int>(null, 0);
         onInventoryChanged.Invoke(slot, null, 0);
+    }
+
+    public void RemoveFromSlot(int slot, int amount)
+    {
+        if (amount == 0) return;
+
+        // Get current slot
+        KeyValuePair<Item, int> currentSlot = inventory[slot];
+
+        if (amount > currentSlot.Value) return;
+
+        if (currentSlot.Key == null) return;
+
+        KeyValuePair<Item, int> newSlot = new KeyValuePair<Item, int>();
+        int newAmount = currentSlot.Value - amount;
+
+        if (newAmount == 0)
+        {
+            EmptySlot(slot);
+        }
+        else
+        {
+            newSlot = new KeyValuePair<Item, int>(currentSlot.Key, newAmount);
+            inventory[slot] = newSlot;
+            onInventoryChanged.Invoke(slot, newSlot.Key, newSlot.Value);
+        }
     }
 }

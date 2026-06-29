@@ -13,6 +13,7 @@ public class PlayerInventory : MonoBehaviour
 
         input.Interact.Inventory.performed += Inventory;
         input.Interact.Escape.performed += EscapeCloseInventory;
+        input.Interact.Test.performed += PrintInventory;
     }
 
     private void OnEnable()
@@ -57,5 +58,13 @@ public class PlayerInventory : MonoBehaviour
         GetComponent<PlayerMovement>().enabled = false;
         GetComponent<PlayerAim>().enabled = false;
         InventoryManager.instance.isOpen = true;
+    }
+
+    void PrintInventory(InputAction.CallbackContext context)
+    {
+        foreach (var slot in InventoryManager.instance.inventory)
+        {
+            Debug.Log(slot.Key == null ? "Null" : slot.Key.name + " " + slot.Value);
+        }
     }
 }
