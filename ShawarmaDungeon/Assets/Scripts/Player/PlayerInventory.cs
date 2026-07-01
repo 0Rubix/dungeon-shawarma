@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +13,15 @@ public class PlayerInventory : MonoBehaviour
         input.Interact.Inventory.performed += Inventory;
         input.Interact.Escape.performed += EscapeCloseInventory;
         input.Interact.Test.performed += PrintInventory;
+        input.Interact.Hotbar.started += OnHotbarPress;
+    }
+
+    private void Start()
+    {
+        for (int i = 0; i < InventoryManager.instance.hotbarSlots.Length; i++)
+        {
+            InventoryManager.instance.hotbarSlots[i].SetHotkey(input.Interact.Hotbar.GetBindingDisplayString(i));
+        }
     }
 
     private void OnEnable()
@@ -66,5 +74,18 @@ public class PlayerInventory : MonoBehaviour
         {
             Debug.Log(slot.Key == null ? "Null" : slot.Key.name + " " + slot.Value);
         }
+    }
+
+    void OnHotbarPress(InputAction.CallbackContext context)
+    {
+        int bindingIndex = context.action.GetBindingIndexForControl(context.control);
+        InventoryManager.instance.hotbarSlots[InventoryManager.instance.hotbarSlot].rim.SetActive(false);
+        InventoryManager.instance.hotbarSlot = bindingIndex;
+        InventoryManager.instance.hotbarSlots[bindingIndex].rim.SetActive(true);
+
+        if (InventoryManager.instance.hotbarSlots[bindingIndex].item == null)
+            PlayerManager.instance.SwitchHandGFX(null);
+        else
+            PlayerManager.instance.SwitchHandGFX(InventoryManager.instance.hotbarSlots[bindingIndex].item.icon);
     }
 }
