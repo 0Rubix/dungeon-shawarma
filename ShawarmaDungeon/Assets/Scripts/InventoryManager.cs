@@ -78,9 +78,6 @@ public class InventoryManager : MonoBehaviour
 
             onInventoryChanged.Invoke(i, newSlot.Key, newSlot.Value);
 
-            if (i == hotbarSlot)
-                PlayerManager.instance.SwitchHandGFX(newSlot.Key.icon);
-
             return true;
         }
 
@@ -125,9 +122,6 @@ public class InventoryManager : MonoBehaviour
     {
         inventory[slot] = new KeyValuePair<Item, int>(null, 0);
         onInventoryChanged.Invoke(slot, null, 0);
-
-        if (slot == hotbarSlot)
-            PlayerManager.instance.SwitchHandGFX(null);
     }
 
     public void RemoveFromSlot(int slot, int amount)

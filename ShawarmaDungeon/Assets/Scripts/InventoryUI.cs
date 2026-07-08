@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Progress;
 
 public class InventoryUI : MonoBehaviour, IPointerClickHandler
 {
@@ -55,6 +56,23 @@ public class InventoryUI : MonoBehaviour, IPointerClickHandler
                 InventoryManager.instance.rightClickMenuSlot = null;
                 InventoryManager.instance.rightClickMenuOpen = false;
             }
+
+            if (eventData.button == PointerEventData.InputButton.Left
+                && eventData.pointerCurrentRaycast.gameObject.name.Equals("Panel")
+                && InventoryManager.instance.cursorSlot.item != null)
+            {
+                InventorySlot cursorSlot = InventoryManager.instance.cursorSlot;
+                
+                for (int i = 0; i < cursorSlot.amount; i++)
+                {
+                    ItemPrefab itemPrefab = Instantiate(InventoryManager.instance.itemPrefab, GameManager.instance.player.transform.position, Quaternion.identity).GetComponent<ItemPrefab>();
+                    itemPrefab.Setup(cursorSlot.item);
+                }
+
+                InventoryManager.instance.cursorTookFrom = -1;
+                cursorSlot.Clear();
+            }
+
             return;
         }
 
@@ -117,6 +135,8 @@ public class InventoryUI : MonoBehaviour, IPointerClickHandler
         }
         else if (eventData.button == PointerEventData.InputButton.Right)
         {
+            if (currentSlot.item == null) return;
+
             if (InventoryManager.instance.rightClickMenuOpen)
             {
                 InventoryManager.instance.rightClickMenuSlot.CloseRightClickMenu();

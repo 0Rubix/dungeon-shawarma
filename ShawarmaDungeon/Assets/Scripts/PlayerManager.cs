@@ -15,7 +15,7 @@ public class PlayerManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        InventoryManager.instance.onInventoryChanged += UpdateHandGFX;
     }
 
     // Update is called once per frame
@@ -33,5 +33,11 @@ public class PlayerManager : MonoBehaviour
         }
 
         hand.sprite = sprite;
+    }
+
+    private void UpdateHandGFX(int slot, Item item, int amount)
+    {
+        if (slot != InventoryManager.instance.hotbarSlot) return;
+        PlayerManager.instance.SwitchHandGFX(item?.icon);
     }
 }
