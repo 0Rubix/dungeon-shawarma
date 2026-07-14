@@ -24,7 +24,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -124,9 +124,47 @@ TextureImporter:
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
-      outline: []
+      outline:
+      - - {x: 213, y: -58}
+        - {x: 192, y: -58}
+        - {x: 192, y: 12}
+        - {x: 195, y: 12}
+        - {x: 195, y: 15}
+        - {x: 197, y: 15}
+        - {x: 197, y: 19}
+        - {x: 203, y: 19}
+        - {x: 203, y: 41}
+        - {x: 197, y: 41}
+        - {x: 197, y: 52}
+        - {x: 203, y: 52}
+        - {x: 203, y: 74}
+        - {x: 197, y: 74}
+        - {x: 197, y: 78}
+        - {x: 195, y: 78}
+        - {x: 195, y: 80}
+        - {x: 192, y: 80}
+        - {x: 192, y: 111}
+        - {x: 160, y: 111}
+        - {x: 160, y: 114}
+        - {x: 145, y: 114}
+        - {x: 145, y: 122}
+        - {x: 81, y: 122}
+        - {x: 81, y: 114}
+        - {x: 31, y: 114}
+        - {x: 31, y: 123}
+        - {x: -213, y: 123}
+        - {x: -213, y: 14}
+        - {x: -199, y: 14}
+        - {x: -199, y: -32}
+        - {x: -208, y: -32}
+        - {x: -208, y: -121}
+        - {x: -131, y: -121}
+        - {x: -131, y: -116}
+        - {x: -40, y: -116}
+        - {x: -40, y: -123}
+        - {x: 213, y: -123}
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
       spriteID: ee9082588dba44a00800000000000000
       internalID: 739905185230883310

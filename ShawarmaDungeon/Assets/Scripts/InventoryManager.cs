@@ -21,7 +21,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool isOpen = false;
 
-    public KeyValuePair<Item, int>[] inventory;
+    public InventoryItem[] inventory;
     public int hotbarSpace = 5;
     public int inventorySpace = 15;
 
@@ -36,7 +36,11 @@ public class InventoryManager : MonoBehaviour
 
     void Start()
     {
-        inventory = new KeyValuePair<Item, int>[hotbarSpace + inventorySpace]; // The inventory will be the hotbar slots + inventory slots, starting with the hotbar
+        inventory = new InventoryItem[hotbarSpace + inventorySpace]; // The inventory will be the hotbar slots + inventory slots, starting with the hotbar
+        for (int i = 0; i < inventory.Length; i++)
+        {
+            inventory[i] = new InventoryItem();
+        }
     }
 
     void Update()
@@ -52,31 +56,31 @@ public class InventoryManager : MonoBehaviour
         for (int i = 0; i < inventory.Length; i++)
         {
             // Get current slot
-            KeyValuePair<Item, int> slot = inventory[i];
+            InventoryItem slot = inventory[i];
 
-            if (slot.Key != item && slot.Value > 0) continue; // Current slot is not null and is not the same as the added item
-            if (slot.Value >= item.maxStack) continue; // Current slot amount should be less than the added item max stack. we already made sure the item is the same or null
+            if (slot.item != item && slot.amount > 0) continue; // Current slot is not null and is not the same as the added item
+            if (slot.amount >= item.maxStack) continue; // Current slot amount should be less than the added item max stack. we already made sure the item is the same or null
 
-            KeyValuePair<Item, int> newSlot = new KeyValuePair<Item, int>();
+            InventoryItem newSlot = new InventoryItem();
 
-            if (slot.Key == null)
+            if (slot.item == null)
             {
-                newSlot = new KeyValuePair<Item, int>(item, amount);
+                newSlot = new InventoryItem(item, amount);
                 inventory[i] = newSlot;
             }
             else
             {
-                int availableAmount = item.maxStack - slot.Value; // How many more items can the slot fit before reaching the stack
+                int availableAmount = item.maxStack - slot.amount; // How many more items can the slot fit before reaching the stack
                 int newAmount = availableAmount > amount ? amount : availableAmount;
                 int continueAmount = amount > availableAmount ? amount - availableAmount : 0; // The amount to use in the recursion call
 
-                newSlot = new KeyValuePair<Item, int>(item, slot.Value + newAmount);
+                newSlot = new InventoryItem(item, slot.amount + newAmount);
                 inventory[i] = newSlot;
 
                 AddItem(item, continueAmount);
             }
 
-            onInventoryChanged.Invoke(i, newSlot.Key, newSlot.Value);
+            onInventoryChanged.Invoke(i, newSlot.item, newSlot.amount);
 
             return true;
         }
@@ -89,38 +93,38 @@ public class InventoryManager : MonoBehaviour
         if (amount == 0) return false;
 
         // Get current slot
-        KeyValuePair<Item, int> currentSlot = inventory[slot];
+        InventoryItem currentSlot = inventory[slot];
 
-        if (currentSlot.Key != item && currentSlot.Value > 0) return true; ; // Current slot is not null and is not the same as the added item
-        if (currentSlot.Value >= item.maxStack) return true; ; // Current slot amount should be less than the added item max stack. we already made sure the item is the same or null
+        if (currentSlot.item != item && currentSlot.amount > 0) return true; ; // Current slot is not null and is not the same as the added item
+        if (currentSlot.amount >= item.maxStack) return true; ; // Current slot amount should be less than the added item max stack. we already made sure the item is the same or null
 
-        KeyValuePair<Item, int> newSlot = new KeyValuePair<Item, int>();
+        InventoryItem newSlot = new InventoryItem();
 
-        if (currentSlot.Key == null)
+        if (currentSlot.item == null)
         {
-            newSlot = new KeyValuePair<Item, int>(item, amount);
+            newSlot = new InventoryItem(item, amount);
             inventory[slot] = newSlot;
         }
         else
         {
-            int availableAmount = item.maxStack - currentSlot.Value; // How many more items can the slot fit before reaching the stack
+            int availableAmount = item.maxStack - currentSlot.amount; // How many more items can the slot fit before reaching the stack
             int newAmount = availableAmount > amount ? amount : availableAmount;
             int continueAmount = amount > availableAmount ? amount - availableAmount : 0; // The amount to use in the recursion call
 
-            newSlot = new KeyValuePair<Item, int>(item, currentSlot.Value + newAmount);
+            newSlot = new InventoryItem(item, currentSlot.amount + newAmount);
             inventory[slot] = newSlot;
 
             AddItem(item, continueAmount);
         }
 
-        onInventoryChanged.Invoke(slot, newSlot.Key, newSlot.Value);
+        onInventoryChanged.Invoke(slot, newSlot.item, newSlot.amount);
 
         return true;
     }
 
     public void EmptySlot(int slot)
     {
-        inventory[slot] = new KeyValuePair<Item, int>(null, 0);
+        inventory[slot] = new InventoryItem();
         onInventoryChanged.Invoke(slot, null, 0);
     }
 
@@ -129,14 +133,14 @@ public class InventoryManager : MonoBehaviour
         if (amount == 0) return;
 
         // Get current slot
-        KeyValuePair<Item, int> currentSlot = inventory[slot];
+        InventoryItem currentSlot = inventory[slot];
 
-        if (amount > currentSlot.Value) return;
+        if (amount > currentSlot.amount) return;
 
-        if (currentSlot.Key == null) return;
+        if (currentSlot.item == null) return;
 
-        KeyValuePair<Item, int> newSlot = new KeyValuePair<Item, int>();
-        int newAmount = currentSlot.Value - amount;
+        InventoryItem newSlot = new InventoryItem();
+        int newAmount = currentSlot.amount - amount;
 
         if (newAmount == 0)
         {
@@ -144,9 +148,9 @@ public class InventoryManager : MonoBehaviour
         }
         else
         {
-            newSlot = new KeyValuePair<Item, int>(currentSlot.Key, newAmount);
+            newSlot = new InventoryItem(currentSlot.item, newAmount);
             inventory[slot] = newSlot;
-            onInventoryChanged.Invoke(slot, newSlot.Key, newSlot.Value);
+            onInventoryChanged.Invoke(slot, newSlot.item, newSlot.amount);
         }
     }
 }

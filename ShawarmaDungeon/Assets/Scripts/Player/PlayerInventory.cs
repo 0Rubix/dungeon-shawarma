@@ -72,7 +72,7 @@ public class PlayerInventory : MonoBehaviour
     {
         foreach (var slot in InventoryManager.instance.inventory)
         {
-            Debug.Log(slot.Key == null ? "Null" : slot.Key.name + " " + slot.Value);
+            Debug.Log(slot.item == null ? "Null" : slot.item.name + " " + slot.amount);
         }
     }
 
@@ -86,6 +86,6 @@ public class PlayerInventory : MonoBehaviour
         if (InventoryManager.instance.hotbarSlots[bindingIndex].item == null)
             PlayerManager.instance.SwitchHandGFX(null);
         else
-            PlayerManager.instance.SwitchHandGFX(InventoryManager.instance.hotbarSlots[bindingIndex].item.icon);
+            PlayerManager.instance.SwitchHandGFX(InventoryManager.instance.hotbarSlots[bindingIndex].item);
     }
 }
