@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fe75880768e7d0488e447965c7790c7, type: 3}
+  m_Name: Machete
+  m_EditorClassIdentifier: Assembly-CSharp::Weapon
+  name: Machete
+  icon: {fileID: 668933050243844793, guid: 1b4f0a5dd4a199443baf9e7d36ce2fef, type: 3}
+  inventoryIcon: {fileID: 668933050243844793, guid: 1b4f0a5dd4a199443baf9e7d36ce2fef, type: 3}
+  maxStack: 1
+  options: 10
+  controller: {fileID: 9100000, guid: 7339f4dfff591e34d837f7619fa1419f, type: 2}
+  attack: 20
+  attackMultiplier: 1.2
+  attackRange: 1.4
+  attackAmount: 3
+  parrySpeed: 1
+  attackCooldown: 1
+  cooldownBtwAttacks: 0.25

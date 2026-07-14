@@ -11,6 +11,11 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] private SpriteRenderer hand;
     [SerializeField] private Sprite handSprite;
+    [SerializeField] private RuntimeAnimatorController handController;
+    [SerializeField] private Animator handAnim;
+
+    public delegate void HeldItemchanged(Item item);
+    public HeldItemchanged onHeldItemChanged;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,20 +29,33 @@ public class PlayerManager : MonoBehaviour
         
     }
 
-    public void SwitchHandGFX(Sprite sprite)
+    public void SwitchHandGFX(Item item)
     {
-        if (sprite == null)
+        onHeldItemChanged?.Invoke(item);
+
+        if (item is Weapon w)
         {
-            hand.sprite = handSprite;
+            handAnim.runtimeAnimatorController = w.controller;
             return;
         }
+        else
+        {
+            handAnim.runtimeAnimatorController = handController;
 
-        hand.sprite = sprite;
+            if (item == null)
+            {
+                hand.sprite = handSprite;
+                return;
+            }
+
+            hand.sprite = item.icon;
+        }
     }
 
     private void UpdateHandGFX(int slot, Item item, int amount)
     {
         if (slot != InventoryManager.instance.hotbarSlot) return;
-        PlayerManager.instance.SwitchHandGFX(item?.icon);
+
+        SwitchHandGFX(item);
     }
 }
