@@ -33,23 +33,15 @@ public class PlayerManager : MonoBehaviour
     {
         onHeldItemChanged?.Invoke(item);
 
-        if (item is Weapon w)
+        handAnim.runtimeAnimatorController = handController;
+
+        if (item == null)
         {
-            handAnim.runtimeAnimatorController = w.controller;
+            hand.sprite = handSprite;
             return;
         }
-        else
-        {
-            handAnim.runtimeAnimatorController = handController;
 
-            if (item == null)
-            {
-                hand.sprite = handSprite;
-                return;
-            }
-
-            hand.sprite = item.icon;
-        }
+        hand.sprite = item.icon;
     }
 
     private void UpdateHandGFX(int slot, Item item, int amount)

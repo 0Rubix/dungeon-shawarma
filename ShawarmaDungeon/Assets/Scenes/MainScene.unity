@@ -479,6 +479,10 @@ MonoBehaviour:
   modifiedAttackCooldown: 0
   modifiedTimeBtwAttacks: 0
   modifiedAttackAmount: 0
+  anim: {fileID: 0}
+  attackable:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &83561130
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3731,10 +3735,6 @@ MonoBehaviour:
   entity: {fileID: 975013321}
   canAttack: 1
   attackPoint: {fileID: 301525356}
-  attackable:
-    serializedVersion: 2
-    m_Bits: 64
-  anim: {fileID: 301525357}
 --- !u!114 &975013321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3762,6 +3762,10 @@ MonoBehaviour:
   modifiedAttackCooldown: 0
   modifiedTimeBtwAttacks: 0
   modifiedAttackAmount: 0
+  anim: {fileID: 301525357}
+  attackable:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1001 &1006890126
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7064,7 +7068,7 @@ PrefabInstance:
     - target: {fileID: 4069022580294222694, guid: 99b562f52daeabc4a86b2834baf157d5, type: 3}
       propertyPath: item
       value: 
-      objectReference: {fileID: 11400000, guid: c4ed8e4f23e6d384aa68f2e858547688, type: 2}
+      objectReference: {fileID: 11400000, guid: 1a5e85e586f814e4fa9de9803d894299, type: 2}
     - target: {fileID: 4397398915955105925, guid: 99b562f52daeabc4a86b2834baf157d5, type: 3}
       propertyPath: m_Name
       value: Item
