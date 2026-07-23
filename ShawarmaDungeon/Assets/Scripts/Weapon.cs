@@ -12,6 +12,9 @@ public class Weapon : Item
     public float cooldownBtwAttacks;
     public RuntimeAnimatorController controller;
 
+    [Header("Misc")]
+    public GameObject projectile;
+
     public virtual void Attack(Entity entity) { }
 
     public virtual IEnumerator MainCooldown(Entity entity)

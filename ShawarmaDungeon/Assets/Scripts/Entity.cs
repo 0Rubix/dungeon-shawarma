@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Entity : MonoBehaviour
@@ -16,6 +15,7 @@ public class Entity : MonoBehaviour
     public Stat cooldownBtwAttacks;
     public LayerMask attackLayer;
 
+    [HideInInspector]
     public Coroutine mainCooldownRoutine;
 
     public Animator anim;
